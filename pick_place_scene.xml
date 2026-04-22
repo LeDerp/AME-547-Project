@@ -1,0 +1,81 @@
+<mujoco model="ur10e_pick_place">
+  
+  <include file="ur10e_vacuum_gripper.xml"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81" iterations="50" solver="Newton"/>
+
+  <equality>
+    <weld name="vacuum_attach_sheet1_1" site1="vacuum_site_1" site2="sheet1_1" active="false"/>
+    <weld name="vacuum_attach_sheet1_2" site1="vacuum_site_2" site2="sheet1_2" active="false"/>
+    <weld name="vacuum_attach_sheet1_3" site1="vacuum_site_3" site2="sheet1_3" active="false"/>
+    <weld name="vacuum_attach_sheet1_4" site1="vacuum_site_4" site2="sheet1_4" active="false"/>
+
+    <weld name="vacuum_attach_sheet2_1" site1="vacuum_site_1" site2="sheet2_1" active="false"/>
+    <weld name="vacuum_attach_sheet2_2" site1="vacuum_site_2" site2="sheet2_2" active="false"/>
+    <weld name="vacuum_attach_sheet2_3" site1="vacuum_site_3" site2="sheet2_3" active="false"/>
+    <weld name="vacuum_attach_sheet2_4" site1="vacuum_site_4" site2="sheet2_4" active="false"/>
+  </equality>
+
+  <asset>
+    <texture name="tex_floor" type="2d" builtin="checker"
+             rgb1="0.75 0.75 0.75" rgb2="0.55 0.55 0.55"
+             width="512" height="512"/>
+    <material name="mat_floor"  texture="tex_floor" texrepeat="4 4"/>
+    <material name="mat_table"  rgba="0.72 0.52 0.34 1"/>
+    <material name="mat_target" rgba="0.1 0.9 0.1 0.4"/>
+  </asset>
+
+  <worldbody>
+    <light name="sun"  pos="0 0 4"   dir="0 0 -1"   diffuse="0.7 0.7 0.7" castshadow="true"/>
+    <light name="fill" pos="2 2 2"   dir="-1 -1 -1" diffuse="0.3 0.3 0.35"/>
+
+    <geom name="floor" type="plane" size="4 4 0.1" material="mat_floor"
+          contype="1" conaffinity="1"/>
+
+    <!-- Tray: top surface at z = 0.372 -->
+    <body name="tray" pos="0.8 0.0 0.185">
+      <geom type="box" size="0.55 0.55 0.02"  pos="0.0 0  0.185" material="mat_table"
+            contype="1" conaffinity="1"/>
+      <geom type="box" size="0.03 0.03 0.185" pos=" 0.5  0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos="-0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos=" 0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos="-0.5 0.5 0" material="mat_table"/>
+    </body>
+
+    <body name="table" pos="-0.5 0.8 0.185">
+      <geom type="box" size="0.55 0.55 0.02"  pos="0.0 0  0.185" material="mat_table"
+            contype="1" conaffinity="1"/>
+      <geom type="box" size="0.03 0.03 0.185" pos=" 0.5  0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos="-0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos=" 0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.185" pos="-0.5 0.5 0" material="mat_table"/>
+    </body>
+
+    <!-- Red cube to pick (free joint lets physics move it)             -->
+    <!-- friction="sliding torsional rolling" — high sliding friction   -->
+    <!-- prevents the cube slipping out of the gripper during transport -->
+    <body name="sheet1" pos="0.8 0.0 0.400">
+      <joint name="sheet1_free" type="free"/>
+      <geom type="box" size="0.5 0.5 0.001"
+            rgba="0.92 0.15 0.99 1" mass="0.01"
+            friction="0.1 0.1 0.1" contype="1" conaffinity="1"/>
+      <site name="sheet1_1" pos="0.3 0.04 0" size="0.001"/>
+      <site name="sheet1_2" pos="0.3 -0.04 0" size="0.001"/>
+      <site name="sheet1_3" pos="-0.3 0.04 0" size="0.001"/>
+      <site name="sheet1_4" pos="-0.3 -0.04 0" size="0.001"/>
+    </body>
+
+    <body name="sheet2" pos="0.8 0.0 0.402">
+      <joint name="sheet2_free" type="free"/>
+      <geom type="box" size="0.5 0.5 0.001"
+            rgba="0.0 0.15 0.99 1" mass="0.01"
+            friction="0.1 0.1 0.1" contype="1" conaffinity="1"/>
+      <site name="sheet2_1" pos="0.3 0.04 0" size="0.001"/>
+      <site name="sheet2_2" pos="0.3 -0.04 0" size="0.001"/>
+      <site name="sheet2_3" pos="-0.3 0.04 0" size="0.001"/>
+      <site name="sheet2_4" pos="-0.3 -0.04 0" size="0.001"/>
+    </body>
+
+  </worldbody>
+
+</mujoco>
