@@ -1,0 +1,66 @@
+<mujoco model="ur10e_pick_place">
+  
+  <include file="ur10e_vacuum_gripper.xml"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81" iterations="50" solver="Newton"/>
+
+  <equality>
+    <weld name="vacuum_attach_sheet1" site1="vacuum_site" site2="sheet1" active="false"/>
+
+    <weld name="vacuum_attach_sheet2" site1="vacuum_site" site2="sheet2" active="false"/>
+  </equality>
+
+  <asset>
+    <texture name="tex_floor" type="2d" builtin="checker"
+             rgb1="0.75 0.75 0.75" rgb2="0.55 0.55 0.55"
+             width="512" height="512"/>
+    <material name="mat_floor"  texture="tex_floor" texrepeat="4 4"/>
+    <material name="mat_table"  rgba="0.72 0.52 0.34 1"/>
+    <material name="mat_target" rgba="0.1 0.9 0.1 0.4"/>
+  </asset>
+
+  <worldbody>
+    <light name="sun"  pos="0 0 4"   dir="0 0 -1"   diffuse="0.7 0.7 0.7" castshadow="true"/>
+    <light name="fill" pos="2 2 2"   dir="-1 -1 -1" diffuse="0.3 0.3 0.35"/>
+
+    <geom name="floor" type="plane" size="4 4 0.1" material="mat_floor"
+          contype="1" conaffinity="1"/>
+
+    <!-- Tray: top surface at z = 0.372 -->
+    <body name="tray" pos="0.8 -0.3 0.155">
+      <geom type="box" size="0.55 0.55 0.02"  pos="0.0 0  0.155" material="mat_table"
+            contype="1" conaffinity="1"/>
+      <geom type="box" size="0.03 0.03 0.155" pos=" 0.5  0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos="-0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos=" 0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos="-0.5 0.5 0" material="mat_table"/>
+    </body>
+
+    <body name="table" pos="-0.3 0.8 0.155">
+      <geom type="box" size="0.55 0.55 0.02"  pos="0.0 0  0.155" material="mat_table"
+            contype="1" conaffinity="1"/>
+      <geom type="box" size="0.03 0.03 0.155" pos=" 0.5  0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos="-0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos=" 0.5 -0.5 0" material="mat_table"/>
+      <geom type="box" size="0.03 0.03 0.155" pos="-0.5 0.5 0" material="mat_table"/>
+    </body>
+
+    <body name="sheet1" pos="0.8 -0.3 0.400">
+      <joint name="sheet1_free" type="free"/>
+      <geom type="box" size="0.5 0.5 0.001"
+            rgba="0.92 0.15 0.99 1" mass="0.01"
+            friction="1 1 1" contype="1" conaffinity="1" margin="0.002" gap="0.001" solref="0.001 1" solimp="0.99 0.995 0.0001"/>
+      <site name="sheet1" pos="0.0 0.0 0.001" size="0.001" quat="1 0 0 0"/>
+    </body>
+
+    <body name="sheet2" pos="0.8 -0.3 0.402">
+      <joint name="sheet2_free" type="free"/>
+      <geom type="box" size="0.5 0.5 0.001"
+            rgba="0.0 0.15 0.99 1" mass="0.01"
+            friction="1 1 1" contype="1" conaffinity="1" margin="0.002" gap="0.001" solref="0.001 1" solimp="0.99 0.995 0.0001"/>
+      <site name="sheet2" pos="0.0 0.0 0.001" size="0.001" quat="0.7071 0 0 0.7071"/>
+    </body>
+
+  </worldbody>
+
+</mujoco>
